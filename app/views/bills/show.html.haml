@@ -1,2 +1,89 @@
-%h1 Bills#show
-%p Find me in app/views/bills/show.html.haml
+%div.container
+  %div.row
+    %div.col-md-8
+      %h1
+        Your bill
+    %div.col-md-4
+      %h1.right
+        Total:
+        = @bill.total
+  %div.row
+    %div.col-md-8
+      %h4
+        = "Period: #{@bill.statement['period']['from']} - #{@bill.statement['period']['to']}"
+    %div.col-md-4
+      %h4.right
+        %span.label.label-danger Payment date:
+        = @bill.statement['due']
+
+  %h2 Subscriptions
+  %table.table#subs
+    %thead
+      %tr
+        %th #
+        %th Name
+        %th Cost
+    %tbody
+      - @bill.package['subscriptions'].each_with_index do |subscription, index|
+        %tr
+          %th= index + 1
+          %td= subscription['name']
+          %td= subscription['cost']
+    %tfoot
+      %tr
+        %td
+        %td
+        %th= "Total: #{@bill.package['total']}"
+  %div#paging-subs
+
+  %h2 Calls
+  %table.table#calls
+    %thead
+      %tr
+        %th #
+        %th Number
+        %th Duration
+        %th Cost
+    %tbody
+      - @bill.call_charges['calls'].each_with_index do |call, index|
+        %tr
+          %th= index + 1
+          %td= call['called']
+          %td= call['duration']
+          %td= call['cost']
+    %tfoot
+      %tr
+        %td
+        %td
+        %td
+        %th="Total: #{@bill.call_charges['total']}"
+  %div#paging-calls
+
+  %h2 SkyStore
+  %table.table#store
+    %thead
+      %tr
+        %th #
+        %th Name
+        %th Type
+        %th Cost
+    %tbody
+      - @bill.sky_store['rentals'].each_with_index do |product, index|
+        %tr
+          %th= index + 1
+          %td= product['title']
+          %td Rented
+          %td= product['cost']
+      - @bill.sky_store['buyAndKeep'].each_with_index do |product, index|
+        %tr
+          %th= @bill.sky_store['rentals'].count + index + 1
+          %td= product['title']
+          %td Buyed
+          %td= product['cost']
+    %tfoot
+      %tr
+        %td
+        %td
+        %td
+        %th="Total: #{@bill.sky_store['total']}"
+  %div#paging-store
